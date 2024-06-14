@@ -67,7 +67,8 @@ function App() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
+    <div id = "main">
+    <div className="flex justify-center items-center min-h-screen ">
       <ToastContainer />
       <div className="container mx-auto p-5 bg-white shadow-lg rounded-lg max-w-xl">
         <div id="header" className="bg-black text-white text-2xl font-medium p-3 text-center rounded mb-5">To-Dos</div>
@@ -154,6 +155,7 @@ function App() {
         )}
       </div>
     </div>
+    </div>  
   );
 }
 
