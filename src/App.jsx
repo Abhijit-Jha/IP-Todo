@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import 'tailwindcss/tailwind.css';
-import { FaTrashAlt } from 'react-icons/fa';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { FaTrashAlt } from 'react-icons/fa'; // Import the Font Awesome trash icon
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -22,6 +20,7 @@ function App() {
         return [...tasks];
       });
     }, 1000);
+
     return () => clearInterval(interval);
   }, []);
 
@@ -59,11 +58,9 @@ function App() {
     if (timeLeft <= 0) {
       return "Time's up!";
     }
-    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-    return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    return `${minutes}m ${seconds}s`;
   };
 
   return (
@@ -115,7 +112,35 @@ function App() {
                 </div>
               </div>
               <button 
-                className="delete bg-black text-white rounded-full p-2 hover:bg-slate-700 transition"
+                className="delete bg-blue-600 text-white rounded-full p-2 hover:bg-blue-500 transition"
+                onClick={() => deleteTask(task.id)}
+              >
+                <i className="far fa-trash-alt"></i>
+              </button>
+            </div>
+          ))}
+        </div>
+        <div id="donetasks" className="mt-5 bg-white p-4 rounded shadow-md">
+          {tasks.filter(task => task.completed).map(task => (
+            <div key={task.id} className="task flex justify-between items-center p-2 border-b-2 border-gray-300 hover:bg-gray-100 transition line-through">
+              <div className="flex items-center">
+                <input 
+                  type="checkbox" 
+                  className="task-checkbox mr-2" 
+                  checked={task.completed}
+                  onChange={() => toggleComplete(task.id)}
+                />
+                <div className="task-info">
+                  <span className="task-name font-medium">{task.name}</span>
+                  {task.reminder && (
+                    <span className="task-time text-xs text-gray-500 ml-2">
+                      Time left: {calculateTimeLeft(task.reminder)}
+                    </span>
+                  )}
+                </div>
+              </div>
+              <button 
+                className="delete bg-blue-600 text-white rounded-full p-2 hover:bg-blue-500 transition"
                 onClick={() => deleteTask(task.id)}
               >
                 <FaTrashAlt />
@@ -123,39 +148,8 @@ function App() {
             </div>
           ))}
         </div>
-        {tasks.filter(task => task.completed).length > 0 && (
-          <div id="donetasks" className="mt-5 bg-white p-4 rounded shadow-md">
-            {tasks.filter(task => task.completed).map(task => (
-              <div key={task.id} className="task flex justify-between items-center p-2 border-b-2 border-gray-300 hover:bg-gray-100 transition line-through">
-                <div className="flex items-center">
-                  <input 
-                    type="checkbox" 
-                    className="task-checkbox mr-2" 
-                    checked={task.completed}
-                    onChange={() => toggleComplete(task.id)}
-                  />
-                  <div className="task-info">
-                    <span className="task-name font-medium">{task.name}</span>
-                    {task.reminder && (
-                      <span className="task-time text-xs text-gray-500 ml-2">
-                        Time left: {calculateTimeLeft(task.reminder)}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <button 
-                  className="delete bg-black text-white rounded-full p-2 hover:bg-slate-700 transition"
-                  onClick={() => deleteTask(task.id)}
-                >
-                  <FaTrashAlt />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
       </div>
     </div>
-    </div>  
   );
 }
 
