@@ -34,7 +34,7 @@ function App() {
         name: taskName,
         reminder: reminder,
         completed: false,
-        notified: false, // New property to track notification status
+        notified: false,
       };
 
       setTasks([...tasks, task]);
@@ -70,7 +70,7 @@ function App() {
     <div className="flex justify-center items-center min-h-screen">
       <ToastContainer />
       <div className="container mx-auto p-5 bg-white shadow-lg rounded-lg max-w-xl">
-        <div id="header" className="bg-purple-600 text-white text-2xl font-medium p-3 text-center rounded mb-5">To-Dos</div>
+        <div id="header" className="bg-black text-white text-2xl font-medium p-3 text-center rounded mb-5">To-Dos</div>
         <div id="newtask" className="flex flex-col md:flex-row justify-between items-center mb-5 bg-white p-4 rounded shadow-md">
           <input 
             type="text" 
@@ -89,7 +89,7 @@ function App() {
           <button 
             id="push" 
             onClick={addTask} 
-            className="w-full md:w-auto h-12 bg-purple-600 text-white rounded hover:bg-purple-500 transition px-4"
+            className="w-full md:w-auto h-12 bg-black text-white rounded hover:bg-slate-800 transition px-4"
           >
             Add
           </button>
@@ -114,7 +114,7 @@ function App() {
                 </div>
               </div>
               <button 
-                className="delete bg-blue-600 text-white rounded-full p-2 hover:bg-blue-500 transition"
+                className="delete bg-black text-white rounded-full p-2 hover:bg-slate-700 transition"
                 onClick={() => deleteTask(task.id)}
               >
                 <FaTrashAlt />
@@ -122,34 +122,36 @@ function App() {
             </div>
           ))}
         </div>
-        <div id="donetasks" className="mt-5 bg-white p-4 rounded shadow-md">
-          {tasks.filter(task => task.completed).map(task => (
-            <div key={task.id} className="task flex justify-between items-center p-2 border-b-2 border-gray-300 hover:bg-gray-100 transition line-through">
-              <div className="flex items-center">
-                <input 
-                  type="checkbox" 
-                  className="task-checkbox mr-2" 
-                  checked={task.completed}
-                  onChange={() => toggleComplete(task.id)}
-                />
-                <div className="task-info">
-                  <span className="task-name font-medium">{task.name}</span>
-                  {task.reminder && (
-                    <span className="task-time text-xs text-gray-500 ml-2">
-                      Time left: {calculateTimeLeft(task.reminder)}
-                    </span>
-                  )}
+        {tasks.filter(task => task.completed).length > 0 && (
+          <div id="donetasks" className="mt-5 bg-white p-4 rounded shadow-md">
+            {tasks.filter(task => task.completed).map(task => (
+              <div key={task.id} className="task flex justify-between items-center p-2 border-b-2 border-gray-300 hover:bg-gray-100 transition line-through">
+                <div className="flex items-center">
+                  <input 
+                    type="checkbox" 
+                    className="task-checkbox mr-2" 
+                    checked={task.completed}
+                    onChange={() => toggleComplete(task.id)}
+                  />
+                  <div className="task-info">
+                    <span className="task-name font-medium">{task.name}</span>
+                    {task.reminder && (
+                      <span className="task-time text-xs text-gray-500 ml-2">
+                        Time left: {calculateTimeLeft(task.reminder)}
+                      </span>
+                    )}
+                  </div>
                 </div>
+                <button 
+                  className="delete bg-black text-white rounded-full p-2 hover:bg-slate-700 transition"
+                  onClick={() => deleteTask(task.id)}
+                >
+                  <FaTrashAlt />
+                </button>
               </div>
-              <button 
-                className="delete bg-blue-600 text-white rounded-full p-2 hover:bg-blue-500 transition"
-                onClick={() => deleteTask(task.id)}
-              >
-                <FaTrashAlt />
-              </button>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
