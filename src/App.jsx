@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import 'tailwindcss/tailwind.css';
-import { FaTrashAlt } from 'react-icons/fa'; // Import the Font Awesome trash icon
+import { FaTrashAlt } from 'react-icons/fa';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -10,34 +12,46 @@ function App() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTasks(tasks => [...tasks]);
+      setTasks(tasks => {
+        tasks.forEach(task => {
+          if (task.reminder && new Date(task.reminder) - new Date() <= 0 && !task.notified) {
+            toast.warn(`Reminder: Time's up for task "${task.name}"`);
+            task.notified = true;
+          }
+        });
+        return [...tasks];
+      });
     }, 1000);
     return () => clearInterval(interval);
   }, []);
 
   const addTask = () => {
     if (taskName.length === 0) {
-      alert("Please Enter a Task");
+      toast.error("Please enter a task");
     } else {
       const task = {
         id: tasks.length + 1,
         name: taskName,
         reminder: reminder,
         completed: false,
+        notified: false, // New property to track notification status
       };
 
       setTasks([...tasks, task]);
       setTaskName('');
       setReminder('');
+      toast.success("Task added successfully");
     }
   };
 
   const deleteTask = (id) => {
     setTasks(tasks.filter(task => task.id !== id));
+    toast.info("Task deleted");
   };
 
   const toggleComplete = (id) => {
     setTasks(tasks.map(task => task.id === id ? { ...task, completed: !task.completed } : task));
+    toast.success("Task status updated");
   };
 
   const calculateTimeLeft = (reminder) => {
@@ -54,6 +68,7 @@ function App() {
 
   return (
     <div className="flex justify-center items-center min-h-screen">
+      <ToastContainer />
       <div className="container mx-auto p-5 bg-white shadow-lg rounded-lg max-w-xl">
         <div id="header" className="bg-purple-600 text-white text-2xl font-medium p-3 text-center rounded mb-5">To-Dos</div>
         <div id="newtask" className="flex flex-col md:flex-row justify-between items-center mb-5 bg-white p-4 rounded shadow-md">
