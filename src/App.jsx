@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import 'tailwindcss/tailwind.css';
+import { FaTrashAlt } from 'react-icons/fa'; // Import the Font Awesome trash icon
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -11,7 +12,6 @@ function App() {
     const interval = setInterval(() => {
       setTasks(tasks => [...tasks]);
     }, 1000);
-
     return () => clearInterval(interval);
   }, []);
 
@@ -45,9 +45,11 @@ function App() {
     if (timeLeft <= 0) {
       return "Time's up!";
     }
+    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-    return `${minutes}m ${seconds}s`;
+    return `${days}d ${hours}h ${minutes}m ${seconds}s`;
   };
 
   return (
@@ -97,10 +99,10 @@ function App() {
                 </div>
               </div>
               <button 
-                className="delete bg-red-600 text-white rounded-full p-1 hover:bg-red-500 transition"
+                className="delete bg-blue-600 text-white rounded-full p-2 hover:bg-blue-500 transition"
                 onClick={() => deleteTask(task.id)}
               >
-                <i className="far fa-trash-alt"></i>
+                <FaTrashAlt />
               </button>
             </div>
           ))}
@@ -125,10 +127,10 @@ function App() {
                 </div>
               </div>
               <button 
-                className="delete bg-red-600 text-white rounded-full p-1 hover:bg-red-500 transition"
+                className="delete bg-blue-600 text-white rounded-full p-2 hover:bg-blue-500 transition"
                 onClick={() => deleteTask(task.id)}
               >
-                <i className="far fa-trash-alt"></i>
+                <FaTrashAlt />
               </button>
             </div>
           ))}
